@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,17 +11,22 @@ const UpdatePassword = () => {
     const [error, setError] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+    const sessionChecked = useRef(false);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/check-session/', { withCredentials: true })
-            .then(response => {
-                if (response.data.authenticated) {
-                    setUsername(response.data.username);
-                } else {
-                    navigate('/');
-                }
-            })
-            .catch(() => navigate('/'));
+        if (!sessionChecked.current) {
+            sessionChecked.current = true;
+
+            axios.get('http://127.0.0.1:8000/api/check-session/', { withCredentials: true })
+                .then(response => {
+                    if (response.data.authenticated) {
+                        setUsername(response.data.username);
+                    } else {
+                        navigate('/');
+                    }
+                })
+                .catch(() => navigate('/'));
+        }
     }, [navigate]);
 
     const handleUpdatePassword = async () => {
@@ -39,7 +44,7 @@ const UpdatePassword = () => {
 
             setMessage('');
             setError(false);
-            setShowModal(true);  // 🔹 POKAŻ MODAL SUKCESU!
+            setShowModal(true);
         } catch (err) {
             setMessage('Błąd zmiany hasła!');
             setError(true);
@@ -56,13 +61,16 @@ const UpdatePassword = () => {
                 </p>
             )}
 
-            <input
-                type="text"
-                placeholder="Nazwa użytkownika"
-                value={username}
-                readOnly
-                className="border p-2 w-full mb-2 rounded bg-gray-200"
-            />
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
+                <input
+                    type="text"
+                    value={username || "Pobieranie danych..."}
+                    readOnly
+                    className="border p-2 w-full rounded bg-gray-100 font-medium"
+                />
+            </div>
+
             <input
                 type="password"
                 placeholder="Stare hasło"
@@ -95,21 +103,20 @@ const UpdatePassword = () => {
                 ))}
             </div>
 
-            <button onClick={handleUpdatePassword} className="w-full bg-yellow-500 text-white p-2 rounded mb-2">
+            <button
+                onClick={handleUpdatePassword}
+                className="w-full bg-yellow-500 text-white p-2 rounded mb-2 hover:bg-yellow-600 transition-colors"
+            >
                 Zmień hasło
             </button>
 
-            {/* 🔹 MODAL SUKCESU */}
             {showModal && (
-                <div
-                    className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50"
-                    onClick={() => setShowModal(false)} // Zamknij klikając tło
-                >
-                    <div className="bg-white p-6 rounded shadow-lg text-center">
+                <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white p-6 rounded shadow-lg text-center max-w-sm w-full">
                         <h2 className="text-green-600 font-bold text-xl mb-4">Hasło zmienione pomyślnie!</h2>
                         <button
                             onClick={() => setShowModal(false)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                         >
                             OK
                         </button>

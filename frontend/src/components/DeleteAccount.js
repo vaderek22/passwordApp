@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,17 +10,22 @@ const DeleteAccount = () => {
     const [error, setError] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const navigate = useNavigate();
+    const sessionChecked = useRef(false);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/check-session/', { withCredentials: true })
-            .then(response => {
-                if (response.data.authenticated) {
-                    setUsername(response.data.username);
-                } else {
-                    navigate('/');
-                }
-            })
-            .catch(() => navigate('/'));
+        if (!sessionChecked.current) {
+            sessionChecked.current = true;
+
+            axios.get('http://127.0.0.1:8000/api/check-session/', { withCredentials: true })
+                .then(response => {
+                    if (response.data.authenticated) {
+                        setUsername(response.data.username);
+                    } else {
+                        navigate('/');
+                    }
+                })
+                .catch(() => navigate('/'));
+        }
     }, [navigate]);
 
     const handleDeleteAccount = async () => {
@@ -69,6 +74,7 @@ const DeleteAccount = () => {
         } catch (err) {
             setMessage('Wystąpił błąd podczas usuwania konta.');
             setError(true);
+            setShowConfirmationModal(false);
         }
     };
 
@@ -82,13 +88,16 @@ const DeleteAccount = () => {
                 </p>
             )}
 
-            <input
-                type="text"
-                placeholder="Nazwa użytkownika"
-                value={username}
-                readOnly
-                className="border p-2 w-full mb-2 rounded bg-gray-200"
-            />
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
+                <input
+                    type="text"
+                    value={username || "Pobieranie danych..."}
+                    readOnly
+                    className="border p-2 w-full rounded bg-gray-100 font-medium"
+                />
+            </div>
+
             <input
                 type="password"
                 placeholder="Podaj hasło"
@@ -106,29 +115,26 @@ const DeleteAccount = () => {
 
             <button
                 onClick={handleDeleteAccount}
-                className="w-full bg-red-500 text-white p-2 rounded mb-2"
+                className="w-full bg-red-500 text-white p-2 rounded mb-2 hover:bg-red-600 transition-colors"
             >
                 Usuń konto
             </button>
 
             {showConfirmationModal && (
-                <div
-                    className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50"
-                    onClick={() => setShowConfirmationModal(false)}
-                >
-                    <div className="bg-white p-6 rounded shadow-lg text-center">
+                <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white p-6 rounded shadow-lg text-center max-w-sm w-full">
                         <h2 className="text-red-600 font-bold text-xl mb-4">Czy na pewno chcesz usunąć konto?</h2>
                         <p className="mb-4">Ta operacja jest nieodwracalna.</p>
                         <div className="flex justify-center space-x-4">
                             <button
                                 onClick={() => setShowConfirmationModal(false)}
-                                className="bg-gray-500 text-white px-4 py-2 rounded"
+                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
                             >
                                 Nie
                             </button>
                             <button
                                 onClick={confirmDeleteAccount}
-                                className="bg-red-500 text-white px-4 py-2 rounded"
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
                             >
                                 Tak
                             </button>

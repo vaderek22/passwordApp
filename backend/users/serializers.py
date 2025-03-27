@@ -1,14 +1,7 @@
 from rest_framework import serializers
 from .models import User
-from passlib.hash import argon2, bcrypt, sha1_crypt
-import hashlib
+from .hashing import HASH_METHODS
 
-HASH_METHODS = {
-    'md5': lambda p: hashlib.md5(p.encode()).hexdigest(),
-    'sha1': lambda p: sha1_crypt.hash(p),
-    'bcrypt': lambda p: bcrypt.hash(p),
-    'argon2': lambda p: argon2.hash(p),
-}
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -23,15 +16,15 @@ class UserSerializer(serializers.ModelSerializer):
         hash_method = data.get('hash_method')
 
         if not password:
-            raise serializers.ValidationError({"password": "This field is required."})
+            raise serializers.ValidationError({"password": "To pole jest wymagane."})
 
         if not hash_method:
-            raise serializers.ValidationError({"hash_method": "This field is required."})
+            raise serializers.ValidationError({"hash_method": "To pole jest wymagane."})
 
         if hash_method in HASH_METHODS:
             data['password_hash'] = HASH_METHODS[hash_method](password)
         else:
-            raise serializers.ValidationError({"hash_method": "Invalid hash method."})
+            raise serializers.ValidationError({"hash_method": "Niepoprawna metoda hashowania."})
 
         return data
 

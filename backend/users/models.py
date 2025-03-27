@@ -1,24 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-import hashlib
-from passlib.hash import argon2, bcrypt, sha1_crypt
 from django.utils import timezone
-
-# Definicja metod haszowania
-HASH_METHODS = {
-    'md5': lambda p: hashlib.md5(p.encode()).hexdigest(),
-    'sha1': lambda p: sha1_crypt.hash(p),
-    'bcrypt': lambda p: bcrypt.hash(p),
-    'argon2': lambda p: argon2.hash(p),
-}
-
-# Definicja metod weryfikacji hasła
-VERIFY_METHODS = {
-    'md5': lambda p, h: hashlib.md5(p.encode()).hexdigest() == h,
-    'sha1': lambda p, h: sha1_crypt.verify(p, h),
-    'bcrypt': lambda p, h: bcrypt.verify(p, h),
-    'argon2': lambda p, h: argon2.verify(p, h),
-}
+from .hashing import HASH_METHODS,VERIFY_METHODS
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password, hash_method='argon2'):
@@ -26,7 +9,7 @@ class UserManager(BaseUserManager):
             raise ValueError("Użytkownik już istnieje!")
 
         if hash_method not in HASH_METHODS:
-            raise ValueError("Invalid hash method.")
+            raise ValueError("Niepoprawna metoda hashowania.")
 
         hashed_password = HASH_METHODS[hash_method](password)
 

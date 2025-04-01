@@ -21,7 +21,7 @@ def export_hashes(modeladmin, request, queryset):
         return response
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'hash_method', 'password_hash', 'last_login')
+    list_display = ('id','username', 'hash_method', 'password_hash', 'last_login')
     actions = [export_hashes]
 
 admin.site.register(User, UserAdmin)

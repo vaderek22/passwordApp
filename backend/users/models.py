@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField(max_length=150, unique=True)
     password_hash = models.TextField()
-    hash_method = models.CharField(max_length=10, choices=[(h, h) for h in HASH_METHODS.keys()])
+    hash_method = models.CharField(max_length=20, choices=[(h, h) for h in HASH_METHODS.keys()])
     last_login = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()

@@ -7,7 +7,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [hashMethod, setHashMethod] = useState('argon2');
     const [error, setError] = useState('');
-    const [showModal, setShowModal] = useState(false); // 🔹 Nowy stan modala
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async () => {
@@ -19,7 +19,7 @@ const Register = () => {
             });
 
             setError('');
-            setShowModal(true); // 🔹 Pokaż modal sukcesu
+            setShowModal(true);
         } catch (err) {
             setError('Błąd rejestracji. Spróbuj ponownie.');
         }
@@ -70,7 +70,6 @@ const Register = () => {
                 Masz już konto? <a href="/" className="text-blue-500">Zaloguj się</a>
             </p>
 
-            {/* 🔹 MODAL REJESTRACJI */}
             {showModal && (
                 <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
                     <div className="bg-white p-6 rounded shadow-lg text-center">
@@ -78,7 +77,7 @@ const Register = () => {
                         <button
                             onClick={() => {
                                 setShowModal(false);
-                                navigate('/'); // 🔹 Przekierowanie do logowania
+                                navigate('/');
                             }}
                             className="bg-blue-500 text-white px-4 py-2 rounded"
                         >

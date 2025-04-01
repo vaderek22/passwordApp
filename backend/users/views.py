@@ -5,7 +5,6 @@ from .models import User, HASH_METHODS
 from .serializers import UserSerializer
 from django.contrib.auth import logout
 
-
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -34,12 +33,6 @@ class LoginView(APIView):
         request.session.save()
 
         return Response({"message": "Zalogowano pomyślnie"}, status=status.HTTP_200_OK)
-
-class UserListView(APIView):
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UpdatePasswordView(APIView):
     def post(self, request):
@@ -96,7 +89,6 @@ class DeleteAccountView(APIView):
             return Response({"message": "Niepoprawne hasło"}, status=status.HTTP_400_BAD_REQUEST)
 
         user.delete()
-
         logout(request)
 
         return Response({"message": "Konto usunięte pomyślnie"}, status=status.HTTP_200_OK)
@@ -131,5 +123,3 @@ class CheckSessionView(APIView):
 
         print("Brak aktywnej sesji!")
         return Response({"authenticated": False}, status=status.HTTP_401_UNAUTHORIZED)
-
-

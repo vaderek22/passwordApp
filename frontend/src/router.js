@@ -6,6 +6,7 @@ import Home from './components/Home';
 import PasswordStrength from './components/PasswordStrength';
 import DeleteAccount from './components/DeleteAccount';
 import MainLayout from './components/MainLayout';
+import Manage2FA from './components/Manage2FA';
 
 const AppRouter = () => {
     return (
@@ -19,6 +20,7 @@ const AppRouter = () => {
                     <Route path="/password-strenght" element={<PasswordStrength />} />
                     <Route path="/update-password" element={<UpdatePassword />} />
                     <Route path="/delete-account" element={<DeleteAccount />} />
+                    <Route path="/manage-2fa" element={<Manage2FA />} />
                 </Route>
             </Routes>
         </Router>

@@ -55,6 +55,14 @@ const MainLayout = () => {
                             </li>
                             <li>
                                 <button
+                                    onClick={() => navigate('/manage-2fa')}
+                                    className="w-full text-left py-2 px-4 hover:bg-gray-700"
+                                >
+                                    Zarządzaj 2FA
+                                </button>
+                            </li>
+                            <li>
+                                <button
                                     onClick={handleLogout}
                                     className="w-full text-left py-2 px-4 hover:bg-gray-700"
                                 >

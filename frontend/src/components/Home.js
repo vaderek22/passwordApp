@@ -11,6 +11,7 @@ const Home = () => {
                     <li>Pamiętaj, aby regularnie aktualizować swoje hasło w celu zwiększenia bezpieczeństwa.</li>
                     <li>Możesz także sprawdzić siłę swojego aktualnego hasła</li>
                     <li>W każdej chwili możesz usunąć swoje konto.</li>
+                    <li>Możesz zarządzać uwierzytelnianiem dwuetapowym</li>
                     <li>Jeśli chcesz się wylogować, użyj przycisku w panelu bocznym.</li>
                 </ul>
             </div>

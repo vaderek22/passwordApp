@@ -9,7 +9,7 @@ const PasswordStrength = () => {
         const weakPatterns = ["password", "qwerty", "abc", "abcd", "abcdef", "letmein"];
         const sequentialNumbers = /(?:0123|1234|2345|3456|4567|5678|6789|7890|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)/;
         const sequentialLetters = /(?:abcd|bcde|cdef|defg|efgh|fghi|ghij|hijk|ijkl|jklm|klmn|lmno|mnop|nopq|opqr|pqrs|qrst|rstu|stuv|tuvw|uvwx|vwxy|wxyz)/i;
-        const repeatedPatterns = /(\w)\1{2,}/; // Wykrywa powtórzone litery np. aaa, qqq
+        const repeatedPatterns = /(\w)\1{2,}/;
         const commonTriplets = /(?:qwe|asd|zxc|123|234|345|456|567|678|789|890)/i;
 
         if (pwd.length < 8) {

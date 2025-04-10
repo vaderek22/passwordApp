@@ -31,7 +31,7 @@ const MainLayout = () => {
                             </li>
                             <li>
                                 <button
-                                    onClick={() => navigate('/password-strenght')}
+                                    onClick={() => navigate('/password-strength')}
                                     className="w-full text-left py-2 px-4 hover:bg-gray-700"
                                 >
                                     Sprawdź siłę hasła

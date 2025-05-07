@@ -1,5 +1,4 @@
 import hashlib
-import os
 import secrets
 from passlib.hash import argon2, bcrypt
 

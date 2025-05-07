@@ -68,14 +68,14 @@ class UserIntegrationTests(TestCase):
         self.assertIn("sessionid", response.cookies)
 
     def test_failed_login_attempts_counter(self):
-        response = self.client.post(self.login_url, {
+        self.client.post(self.login_url, {
             "username": "testuser",
             "password": "wrongpassword"
         })
         self.user.refresh_from_db()
         self.assertEqual(self.user.failed_login_attempts, 1)
 
-        response = self.client.post(self.login_url, {
+        self.client.post(self.login_url, {
             "username": "testuser",
             "password": "wrongpassword"
         })
@@ -86,7 +86,7 @@ class UserIntegrationTests(TestCase):
         max_attempts = 3
         
         for _ in range(max_attempts):
-            response = self.client.post(self.login_url, {
+            self.client.post(self.login_url, {
                 "username": "testuser",
                 "password": "wrongpassword"
             })

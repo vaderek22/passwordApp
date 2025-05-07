@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import User
 from .hashing import HASH_METHODS
-
+from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
         model = User
@@ -18,10 +18,15 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data.get('hash_method') not in HASH_METHODS:
             raise serializers.ValidationError({"hash_method": "Niepoprawna metoda hashowania."})
+        password = data.get('password')
+        if password and len(password) < 12:
+            raise serializers.ValidationError({"password": "Hasło musi mieć minimum 12 znaków."})
         return data
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+        if len(password) < 12:
+            raise ValidationError("Hasło musi mieć minimum 12 znaków.")
         user = User.objects.create(**validated_data)
         user.set_password(password)
         return user
@@ -30,6 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         
         if password:
+            if len(password) < 12:
+                raise ValidationError("Hasło musi mieć minimum 12 znaków.")
             instance.set_password(password)
 
         for attr, value in validated_data.items():

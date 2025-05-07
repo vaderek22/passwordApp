@@ -30,6 +30,11 @@ const UpdatePassword = () => {
     }, [navigate]);
 
     const handleUpdatePassword = async () => {
+        if (newPassword.length < 12) {
+            setMessage('Nowe hasło musi mieć co najmniej 12 znaków!');
+            setError(true);
+            return;
+        }
         try {
             await axios.post(
                 'http://127.0.0.1:8000/api/update-password/',

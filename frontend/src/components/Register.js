@@ -14,7 +14,12 @@ const Register = () => {
     const [token2FA, setToken2FA] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    
     const handleRegister = async () => {
+        if (password.length < 12) {
+            setError('Hasło musi mieć minimum 12 znaków');
+            return;
+        }
         setIsLoading(true);
         setError('');
         try {

@@ -53,7 +53,7 @@ class UserIntegrationTests(TestCase):
     def test_register_user(self):
         response = self.client.post(self.register_url, {
             "username": "newuser",
-            "password": "newpassword",
+            "password": "newpassword25@",
             "hash_method": "argon2"
         })
         self.assertEqual(response.status_code, 201)

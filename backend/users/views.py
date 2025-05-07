@@ -7,6 +7,9 @@ from django.contrib.auth import logout
 from django.utils import timezone
 from rest_framework.decorators import api_view
 
+UNAUTHORIZED_ACCESS = "Nieautoryzowany dostęp"
+USER_NOT_FOUND = "Nie znaleziono użytkownika"
+
 @api_view(['GET'])
 def setup_2fa(request):
     if 'user_id' not in request.session:
@@ -197,12 +200,12 @@ class UpdatePasswordView(APIView):
         new_password = request.data.get('new_password')
         hash_method = request.data.get('hash_method', 'argon2')
         if 'user_id' not in request.session:
-            return Response({"message": "Nieautoryzowany dostęp"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": UNAUTHORIZED_ACCESS}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({"message": "Nie znaleziono użytkownika"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": USER_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
 
         if not user.check_password(old_password):
             return Response({"message": "Niepoprawne stare hasło"}, status=status.HTTP_400_BAD_REQUEST)
@@ -224,7 +227,7 @@ class LogoutView(APIView):
 class DeleteAccountView(APIView):
     def post(self, request):
         if 'user_id' not in request.session:
-            return Response({"message": "Nieautoryzowany dostęp"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": UNAUTHORIZED_ACCESS}, status=status.HTTP_401_UNAUTHORIZED)
 
         password1 = request.data.get('password1')
         password2 = request.data.get('password2')
@@ -239,7 +242,7 @@ class DeleteAccountView(APIView):
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response({"message": "Nie znaleziono użytkownika"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": USER_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
 
         if not user.check_password(password1):
             return Response({"message": "Niepoprawne hasło"}, status=status.HTTP_400_BAD_REQUEST)
@@ -252,7 +255,7 @@ class DeleteAccountView(APIView):
 class CheckPasswordView(APIView):
     def post(self, request):
         if 'user_id' not in request.session:
-            return Response({"message": "Nieautoryzowany dostęp"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": UNAUTHORIZED_ACCESS}, status=status.HTTP_401_UNAUTHORIZED)
 
         password = request.data.get('password')
 
@@ -260,7 +263,7 @@ class CheckPasswordView(APIView):
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response({"message": "Nie znaleziono użytkownika"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": USER_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
 
         if not user.check_password(password):
             return Response({"message": "Niepoprawne hasło"}, status=status.HTTP_400_BAD_REQUEST)

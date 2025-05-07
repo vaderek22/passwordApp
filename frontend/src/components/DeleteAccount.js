@@ -54,7 +54,17 @@ const DeleteAccount = () => {
             setError(false);
             setShowConfirmationModal(true);
         } catch (err) {
-            setMessage('Nieprawidłowe hasło!');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setMessage('Nieprawidłowe hasło!');
+                } else {
+                    setMessage('Wystąpił błąd serwera. Spróbuj ponownie później.');
+                }
+            } else if (err.request) {
+                setMessage('Brak odpowiedzi z serwera. Sprawdź połączenie internetowe.');
+            } else {
+                setMessage('Wystąpił błąd podczas wysyłania żądania.');
+            }
             setError(true);
         }
     };
@@ -72,7 +82,15 @@ const DeleteAccount = () => {
 
             navigate('/');
         } catch (err) {
-            setMessage('Wystąpił błąd podczas usuwania konta.');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setMessage('Nieprawidłowe dane. Sprawdź wprowadzone hasła.');
+                } else {
+                    setMessage('Wystąpił błąd podczas usuwania konta.');
+                }
+            } else {
+                setMessage('Problem z połączeniem. Spróbuj ponownie.');
+            }
             setError(true);
             setShowConfirmationModal(false);
         }
@@ -89,8 +107,9 @@ const DeleteAccount = () => {
             )}
 
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
+                <label htmlFor="logged-user" className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
                 <input
+                    id="logged-user"
                     type="text"
                     value={username || "Pobieranie danych..."}
                     readOnly

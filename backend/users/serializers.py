@@ -3,6 +3,8 @@ from .models import User
 from .hashing import HASH_METHODS
 from django.core.exceptions import ValidationError
 
+PASSWORD_LENGTH_ERROR = "Hasło musi mieć minimum 12 znaków."
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
@@ -20,13 +22,13 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"hash_method": "Niepoprawna metoda hashowania."})
         password = data.get('password')
         if password and len(password) < 12:
-            raise serializers.ValidationError({"password": "Hasło musi mieć minimum 12 znaków."})
+            raise serializers.ValidationError({"password": PASSWORD_LENGTH_ERROR})
         return data
 
     def create(self, validated_data):
         password = validated_data.pop('password')
         if len(password) < 12:
-            raise ValidationError("Hasło musi mieć minimum 12 znaków.")
+            raise ValidationError(PASSWORD_LENGTH_ERROR)
         user = User.objects.create(**validated_data)
         user.set_password(password)
         return user
@@ -36,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         
         if password:
             if len(password) < 12:
-                raise ValidationError("Hasło musi mieć minimum 12 znaków.")
+                raise ValidationError(PASSWORD_LENGTH_ERROR)
             instance.set_password(password)
 
         for attr, value in validated_data.items():

@@ -60,7 +60,19 @@ const Register = () => {
             
             navigate('/', { state: { registrationSuccess: true } });
         } catch (err) {
-            setError('Nieprawidłowy kod weryfikacyjny');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setError('Nieprawidłowy kod weryfikacyjny');
+                } else if (err.response.status === 401) {
+                    setError('Sesja wygasła, zaloguj się ponownie');
+                } else {
+                    setError(`Błąd serwera: ${err.response.status}`);
+                }
+            } else if (err.request) {
+                setError('Brak odpowiedzi z serwera');
+            } else {
+                setError('Błąd podczas wysyłania żądania');
+            }
         } finally {
             setIsLoading(false);
         }

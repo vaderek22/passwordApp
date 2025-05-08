@@ -8,7 +8,7 @@ const PasswordStrength = () => {
     const detectWeakPatterns = (pwd) => {
         const weakPatterns = ["password", "qwerty", "abc", "abcd", "abcdef", "letmein"];
         const sequentialNumbers = /(?:0123|1234|2345|3456|4567|5678|6789|7890|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)/;
-        const sequentialLetters = /(?:abcd|bcde|cdef|defg|efgh|fghi|ghij|hijk|ijkl|jklm|klmn|lmno|mnop|nopq|opqr|pqrs|qrst|rstu|stuv|tuvw|uvwx|vwxy|wxyz)/i;
+        const sequentialLetters = /(?:abcd|bcde|cdef|defg|efgh|fghi|ghij|hijk|ijkl|jklm|klmn|lmno|mnop|nopq|opqr|pqrs|qrst|rstu|stuv)/i;
         const repeatedPatterns = /(\w)\1{2,}/;
         const commonTriplets = /(?:qwe|asd|zxc|123|234|345|456|567|678|789|890)/i;
 
@@ -64,7 +64,7 @@ const PasswordStrength = () => {
         if (/\W|_/.test(pwd)) {
             score += 20;
         } else {
-            feedbackMsg.push("Dodaj co najmniej jeden znak specjalny (!@#$%^&*). ");
+            feedbackMsg.push("Dodaj co najmniej jeden znak specjalny (!@#$%^&*).");
         }
 
         const weakMessage = detectWeakPatterns(pwd);
@@ -87,6 +87,23 @@ const PasswordStrength = () => {
         setFeedback(feedbackMsg);
     };
 
+    const progressWidth = password.length === 0
+        ? '0%'
+        : strengthLabel === 'Słabe'
+        ? '33%'
+        : strengthLabel === 'Średnie'
+        ? '66%'
+        : '100%';
+
+    const progressColor =
+        strengthLabel === 'Słabe'
+            ? 'bg-red-500'
+            : strengthLabel === 'Średnie'
+            ? 'bg-yellow-500'
+            : strengthLabel === 'Silne'
+            ? 'bg-green-500'
+            : 'bg-gray-200';
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Analiza siły hasła</h2>
@@ -102,15 +119,15 @@ const PasswordStrength = () => {
             />
             <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
                 <div
-                    className={`h-4 rounded-full transition-all ${strengthLabel === 'Słabe' ? 'bg-red-500' : strengthLabel === 'Średnie' ? 'bg-yellow-500' : strengthLabel === 'Silne' ? 'bg-green-500' : 'bg-gray-200'}`}
-                    style={{ width: password.length === 0 ? '0%' : strengthLabel === 'Słabe' ? '33%' : strengthLabel === 'Średnie' ? '66%' : '100%' }}
+                    className={`h-4 rounded-full transition-all ${progressColor}`}
+                    style={{ width: progressWidth }}
                 ></div>
             </div>
             {strengthLabel && <p className="text-gray-700 font-semibold mb-2">Siła hasła: {strengthLabel}</p>}
             {feedback.length > 0 && (
                 <ul className="text-red-500 text-sm mb-2">
-                    {feedback.map((msg, index) => (
-                        <li key={index}>• {msg}</li>
+                    {feedback.map((msg) => (
+                        <li key={msg}>• {msg}</li>
                     ))}
                 </ul>
             )}

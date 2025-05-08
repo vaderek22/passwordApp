@@ -127,15 +127,15 @@ const Manage2FA = () => {
                 <h3 className="text-lg font-semibold mb-2">Aktualny status:</h3>
                 {status ? (
                     <p className={`p-3 rounded ${status.otp_enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        Uwierzytelnianie dwuetapowe jest aktualnie 
-                        <span className="font-bold">{status.otp_enabled ? ' WŁĄCZONE' : ' WYŁĄCZONE'}</span>
+                        Uwierzytelnianie dwuetapowe jest aktualnie&nbsp;
+                        <span className="font-bold">{status.otp_enabled ? 'WŁĄCZONE' : 'WYŁĄCZONE'}</span>
                     </p>
                 ) : (
                     <p className="p-3 bg-gray-100 rounded">Ładowanie statusu...</p>
                 )}
             </div>
 
-            {status && !status.otp_enabled && (
+            {status?.otp_enabled === false && (
                 <>
                     <button 
                         onClick={setup2FA}
@@ -191,7 +191,7 @@ const Manage2FA = () => {
                 </>
             )}
 
-            {status && status.otp_enabled && (
+            {status?.otp_enabled === false && (
                 <button
                     onClick={disable2FA}
                     className="w-full bg-red-500 hover:bg-red-600 text-white p-2 rounded disabled:opacity-50"

@@ -73,8 +73,9 @@ const Login = () => {
             {!requires2FA ? (
                 <>
                     <div className="mb-4">
-                        <label className="block text-gray-700 mb-2">Nazwa użytkownika</label>
+                        <label htmlFor="username" className="block text-gray-700 mb-2">Nazwa użytkownika</label>
                         <input
+                            id="username"
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -83,8 +84,9 @@ const Login = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        <label className="block text-gray-700 mb-2">Hasło</label>
+                        <label htmlFor="password" className="block text-gray-700 mb-2">Hasło</label>
                         <input
+                            id="password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}

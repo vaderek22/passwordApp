@@ -37,8 +37,11 @@ const Manage2FA = () => {
             const response = await axios.get('http://127.0.0.1:8000/api/get-2fa-status/', { withCredentials: true });
             setStatus(response.data);
         } catch (err) {
-            setError('Błąd podczas pobierania statusu 2FA');
-            console.error('Error fetching 2FA status:', err);
+            if (err.response) {
+                setError('Błąd podczas pobierania statusu 2FA.');
+            } else {
+                setError('Brak odpowiedzi z serwera. Sprawdź połączenie.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -52,8 +55,11 @@ const Manage2FA = () => {
             setQrCode(response.data.qr_code);
             setSecret(response.data.secret);
         } catch (err) {
-            setError('Błąd podczas konfiguracji 2FA');
-            console.error('Error setting up 2FA:', err);
+            if (err.response) {
+                setError('Błąd podczas inicjalizacji konfiguracji 2FA.');
+            } else {
+                setError('Brak odpowiedzi z serwera. Sprawdź połączenie.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -67,7 +73,15 @@ const Manage2FA = () => {
             setMessage('Uwierzytelnianie dwuetapowe zostało włączone!');
             fetch2FAStatus();
         } catch (err) {
-            setError('Nieprawidłowy kod weryfikacyjny');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setError('Nieprawidłowy kod weryfikacyjny. Spróbuj ponownie.');
+                } else {
+                    setError('Wystąpił błąd podczas weryfikacji 2FA.');
+                }
+            } else {
+                setError('Brak odpowiedzi z serwera. Sprawdź połączenie internetowe.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -81,8 +95,11 @@ const Manage2FA = () => {
             setMessage('Uwierzytelnianie dwuetapowe zostało wyłączone.');
             fetch2FAStatus();
         } catch (err) {
-            setError('Błąd podczas wyłączania 2FA');
-            console.error('Error disabling 2FA:', err);
+            if (err.response) {
+                setError('Błąd podczas wyłączania 2FA.');
+            } else {
+                setError('Brak odpowiedzi z serwera. Sprawdź połączenie.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -96,8 +113,9 @@ const Manage2FA = () => {
             {message && <div className="mb-4 p-3 bg-blue-100 text-blue-700 rounded">{message}</div>}
 
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
+                <label htmlFor="logged-user"className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
                 <input
+                    id="logged-user"
                     type="text"
                     value={username || "Pobieranie danych..."}
                     readOnly
@@ -110,7 +128,7 @@ const Manage2FA = () => {
                 {status ? (
                     <p className={`p-3 rounded ${status.otp_enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         Uwierzytelnianie dwuetapowe jest aktualnie 
-                        <span className="font-bold"> {status.otp_enabled ? 'WŁĄCZONE' : 'WYŁĄCZONE'}</span>
+                        <span className="font-bold">{status.otp_enabled ? ' WŁĄCZONE' : ' WYŁĄCZONE'}</span>
                     </p>
                 ) : (
                     <p className="p-3 bg-gray-100 rounded">Ładowanie statusu...</p>
@@ -148,8 +166,9 @@ const Manage2FA = () => {
                             </div>
                             
                             <div>
-                                <label className="block text-gray-700 mb-2">Wprowadź kod weryfikacyjny:</label>
+                                <label htmlFor="2fa_key" className="block text-gray-700 mb-2">Wprowadź kod weryfikacyjny:</label>
                                 <input
+                                    id="2fa_key"
                                     type="text"
                                     value={token2FA}
                                     onChange={(e) => setToken2FA(e.target.value)}

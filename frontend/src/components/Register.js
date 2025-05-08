@@ -78,8 +78,9 @@ const Register = () => {
             {!show2FASetup ? (
                 <>
                     <div className="mb-4">
-                        <label className="block text-gray-700 mb-2">Nazwa użytkownika</label>
+                        <label htmlFor="username" className="block text-gray-700 mb-2">Nazwa użytkownika</label>
                         <input
+                            id="password"
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -88,8 +89,9 @@ const Register = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 mb-2">Hasło</label>
+                        <label htmlFor="password" className="block text-gray-700 mb-2">Hasło</label>
                         <input
+                            id="password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -147,8 +149,9 @@ const Register = () => {
                     </div>
                     
                     <div className="mb-6">
-                        <label className="block text-gray-700 mb-2">Wprowadź kod weryfikacyjny:</label>
+                        <label htmlFor="2fa_key" className="block text-gray-700 mb-2">Wprowadź kod weryfikacyjny:</label>
                         <input
+                            id="2fa_key"
                             type="text"
                             value={token2FA}
                             onChange={(e) => setToken2FA(e.target.value)}

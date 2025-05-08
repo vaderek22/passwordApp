@@ -51,7 +51,17 @@ const UpdatePassword = () => {
             setError(false);
             setShowModal(true);
         } catch (err) {
-            setMessage('Błąd zmiany hasła!');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setMessage('Nieprawidłowe hasło!');
+                } else {
+                    setMessage('Wystąpił błąd serwera. Spróbuj ponownie później.');
+                }
+            } else if (err.request) {
+                setMessage('Brak odpowiedzi z serwera. Sprawdź połączenie internetowe.');
+            } else {
+                setMessage('Wystąpił błąd podczas wysyłania żądania.');
+            }
             setError(true);
         }
     };
@@ -67,8 +77,9 @@ const UpdatePassword = () => {
             )}
 
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
+                <label htmlFor="logged-user" className="block text-sm font-medium text-gray-700 mb-1">Zalogowany użytkownik:</label>
                 <input
+                    id="logged_user"
                     type="text"
                     value={username || "Pobieranie danych..."}
                     readOnly

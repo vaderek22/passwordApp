@@ -191,7 +191,7 @@ const Manage2FA = () => {
                 </>
             )}
 
-            {status?.otp_enabled === false && (
+            {status && status.otp_enabled && (
                 <button
                     onClick={disable2FA}
                     className="w-full bg-red-500 hover:bg-red-600 text-white p-2 rounded disabled:opacity-50"

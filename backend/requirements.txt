@@ -1,0 +1,8 @@
+Django>=5.1
+djangorestframework
+mysqlclient
+passlib
+pyotp
+qrcode
+Pillow
+django-cors-headers
